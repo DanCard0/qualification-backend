@@ -2,7 +2,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const session = require('express-session');
+const cookieSession = require('cookie-session');
+const expressFormData = require('express-form-data');
+const fs = require('fs');
 const app = express();
 
 const CONFIG_VALUES = require('./config/config');
@@ -13,13 +15,24 @@ const validate_session = require('./middlewares/validate_session');
 
 mongoose.connect(CONFIG_VALUES.mongoUrl);
 
+const uploadsDir = __dirname + '/uploads';
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir);
+    if (!fs.existsSync(uploadsDir+'/images')) {
+        fs.mkdirSync(uploadsDir+'/images');
+    }
+}
+
 app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({
-    secret: CONFIG_VALUES.session_secret,
-    // resave: false,
-    // saveUninitialized: false
+app.use(cookieSession({
+    name: 'session',
+    keys: ['llave-1', 'llave-2']
+}));
+app.use(expressFormData.parse({
+    keepExtensions: true,
+    // uploadDir: 'uploads'
 }));
 
 const router_app = require('./routes/app');
@@ -31,7 +44,6 @@ app.get('/', async (req, res) => {
 app.get('/users', async (req, res) => {
     try {
         let users = await User.find();
-        console.log(users);
 
         res.status(200).send({ message: 'Usuarios obtenidos exitosamente', users });
     } catch (err) {
