@@ -7,21 +7,9 @@ const Image = require('../models/image');
 
 // const find_image_middleware = require('../middlewares/find_image');
 
-router.get('/', (req, res) => {
-    res.status(200).send({ message: 'Success' });
-});
-
-router.get('/imagenes/new', (req, res) => {
-    res.status(200).send({ message: 'Success' });
-});
-
-router.get('/imagenes/edit/:id', (req, res) => {
-    res.status(200).send({ message: 'Success' });
-});
-
 // router.all('/imagenes/:id*', find_image_middleware);
 
-router.route('/imagenes/:id')
+router.route('/:id')
 .get(async (req, res) => {
     try {
         let image = await Image.findById(req.params.id);
@@ -51,7 +39,7 @@ router.route('/imagenes/:id')
     }
 });
 
-router.route('/imagenes')
+router.route('/')
 .get(async (req, res) => {
     try {
         let images = await Image.find({ creator: res.locals.user._id });
