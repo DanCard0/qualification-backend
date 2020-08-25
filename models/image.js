@@ -1,8 +1,8 @@
 'use strict';
 const mongoose = require('mongoose');
-let Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-let image_schema = new Schema({
+const image_schema = new Schema({
     title: {
         type: String,
         required: true

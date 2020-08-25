@@ -23,8 +23,10 @@
   },
   "homepage": "https://github.com/DanCard0/qualification-backend#readme",
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.19.0",
     "cookie-session": "^1.4.0",
+    "crypto": "^1.0.1",
     "express": "^4.17.1",
     "express-form-data": "^2.0.14",
     "express-formidable": "^1.2.0",
