@@ -2,7 +2,7 @@
 const express = require('express');
 let router = express.Router();
 
-const indexCtrl = require('../controllers/index');
+const authCtrl = require('../controllers/auth');
 
 router.route('/')
 .get(async (req, res) => {
@@ -10,6 +10,9 @@ router.route('/')
 });
 
 router.route('/login')
-.post(indexCtrl.login);
+.post(authCtrl.signIn);
+
+router.route('/registro')
+.post(authCtrl.signUp)
 
 module.exports = router;

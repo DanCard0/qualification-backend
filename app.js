@@ -9,7 +9,7 @@ const app = express();
 
 const CONFIG_VALUES = require('./config/config');
 
-const validate_session = require('./middlewares/validate_session');
+const auth_validation = require('./middlewares/auth');
 
 mongoose.connect(CONFIG_VALUES.mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
@@ -43,14 +43,16 @@ const router_index = require('./routes/index');
 const router_users = require('./routes/users');
 const router_images = require('./routes/images');
 
-app.use('/imagenes', validate_session);
+app.use('/imagenes', auth_validation);
 
-app.use('/', router_index);
-app.use('/usuarios', router_users);
-app.use('/imagenes', router_images);
+const API_PREFIX = '/api/v1';
 
-app.get('*', async (req, res) => {
-    res.status(404).send({ message: 'Ruta no encontrada' });
-});
+app.get('/', (req, res) => res.status(200).send({ message: 'Bienvenido al API de Qualification' }));
+app.use(`${API_PREFIX}/`, router_index);
+app.use(`${API_PREFIX}/usuarios`, router_users);
+app.use(`${API_PREFIX}/imagenes`, router_images);
+
+app.get('*', (req, res) => res.status(404).send({ message: 'Ruta no encontrada' }));
+app.post('*', (req, res) => res.status(404).send({ message: 'Ruta no encontrada' }));
 
 app.listen(CONFIG_VALUES.port, () => console.log(`Server ${app.get('appName')} escuchando en el puerto ${CONFIG_VALUES.port}`));

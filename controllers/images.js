@@ -39,7 +39,7 @@ const deleteImage = async (req, res) => {
 
 const getImages = async (req, res) => {
     try {
-        let images = await Image.find({ creator: res.locals.user._id });
+        let images = await Image.find({ creator: req.user });
         res.status(200).send({ message: 'Imagenes obtenidas exitosamente', images });
     } catch (err) {
         console.error('Error consultando las imágenes: ', err);
@@ -51,7 +51,7 @@ const createImage = async (req, res) => {
     let extension = req.files.attachment.name.split('.').pop();
     let image = new Image({
         title: req.body.title,
-        creator: res.locals.user._id,
+        creator: req.user,
         extension
     });
 

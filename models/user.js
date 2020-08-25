@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 
 const passw_validation = {
     validator: function(val) {
-        return this.password_confirmation == p;
+        return this.password_confirmation == val;
     },
     message: 'Las contraseñas no son iguales'
 };
@@ -56,7 +56,7 @@ user_schema.virtual('password_confirmation').get(() => {
     this.p_c = password;
 });
 
-user_schema.pre('save', (next) => {
+user_schema.pre('save', function (next) {
     let user = this;
     if (!user.isModified('password')) return next();
 
@@ -72,11 +72,18 @@ user_schema.pre('save', (next) => {
     })
 });
 
-user_schema.methods.gravatar = function () {
-    if (!this.email) return 'https://gravatar.com/avatar/?s=200&d=retro';
+user_schema.methods.gravatar = function (size) {
+    if (!size) size = 200;
+    if (!this.email) return `https:/gravatar.com/avatar/?s=${size}&d=retro`;
 
     const md5 = crypto.createHash('md5').update(this.email).digest('hex');
-    return `https://gravatar.com/avatar/${md5}?s=200&d=retro`;
-}
+    return `https://gravatar.com/avatar/${md5}?s=${size}&d=retro`;
+};
+
+user_schema.methods.comparePassword = function (candidatePassword, cb) {
+    bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
+        cb(err, isMatch);
+    });
+};
 
 module.exports = mongoose.model('User', user_schema);

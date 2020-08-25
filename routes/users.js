@@ -5,7 +5,6 @@ let router = express.Router();
 const userCtrl = require('../controllers/users');
 
 router.route('/')
-.get(userCtrl.getUsers)
-.post(userCtrl.createUser);
+.get(userCtrl.getUsers);
 
 module.exports = router;
