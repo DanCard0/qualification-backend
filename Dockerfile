@@ -1,7 +1,5 @@
 FROM node:12.18
 EXPOSE 8080
-ARG MONGO_URL
-ARG PORT
 RUN apt-get update
 RUN apt-get install git
 RUN git clone https://github.com/DanCard0/qualification-backend.git

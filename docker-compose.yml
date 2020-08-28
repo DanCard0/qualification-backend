@@ -1,0 +1,34 @@
+version: "3.1"
+services: 
+    mongo:
+        image: mongo:4.2.9
+        restart: unless-stopped
+        environment:
+            MONGO_INITDB_DATABASE: qualification
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: qualification123.
+        ports:
+            - 27018:27017
+        networks:
+            - practice
+        #volumes:
+           #- ./mongo_script.js:/docker-entrypoint-initdb.d/mongo_script.js
+        expose: 
+            - 27017
+    node:
+        build:
+            context: ./qualification-backend
+        environment: 
+            MONGO_URL: 'mongodb://root:qualification123.@mongo:27017/qualification?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false'
+            PORT: 8080
+        ports:
+            - 8080:8080
+        restart: unless-stopped
+        expose: 
+            - 8080
+        networks:
+            - practice
+        depends_on:
+            - mongo
+networks:
+    practice:
